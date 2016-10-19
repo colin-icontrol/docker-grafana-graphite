@@ -92,6 +92,12 @@ ADD     ./supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 # Grafana
 EXPOSE  80
 
+# Graphite
+EXPOSE 2003/udp 2003/tcp
+
+# Grapite Pickled
+EXPOSE 2004
+
 # StatsD UDP port
 EXPOSE  8125/udp
 
