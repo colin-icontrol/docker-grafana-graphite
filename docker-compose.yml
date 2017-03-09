@@ -13,7 +13,7 @@ services:
       - '8086:8086'
       - '8083:8083'
     volumes:
-      - ./docker-share/data/whisper:/opt/graphite/storage/whisper
-      - ./docker-share/data/grafana:/opt/grafana/data
-      - ./docker-share/log/graphite:/opt/graphite/storage/log
-      - ./docker-share/influxdb:/var/lib/influxdb
+      - ./data/whisper:/opt/graphite/storage/whisper
+      - ./data/grafana:/opt/grafana/data
+      - ./log/graphite:/opt/graphite/storage/log
+      - ./data/influxdb:/var/lib/influxdb
