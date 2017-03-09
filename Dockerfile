@@ -38,8 +38,8 @@ RUN     git clone https://github.com/graphite-project/graphite-web.git /src/grap
         python setup.py install
 
 # Install StatsD
-RUN     git clone https://github.com/etsy/statsd.git /src/statsd                                                                        &&\
-        cd /src/statsd                                                                                                                  &&\
+RUN     git clone https://github.com/etsy/statsd.git /src/statsd                          &&\
+        cd /src/statsd                                                                    &&\
         git checkout v0.7.2
 
 
@@ -50,6 +50,17 @@ RUN     mkdir /src/grafana                                                      
         tar -xzf /src/grafana.tar.gz -C /opt/grafana --strip-components=1                                     &&\
         rm /src/grafana.tar.gz
 
+# Install Influxdb
+RUN	mkdir /src/influxdb && \
+	cd /src/influxdb    && \
+ 	gpg --keyserver hkp://ha.pool.sks-keyservers.net --recv-keys 05CE15085FC09D18E99EFB22684A14CF2582E0C5
+
+ENV INFLUXDB_VERSION 1.2.0
+RUN 	wget -q https://dl.influxdata.com/influxdb/releases/influxdb_${INFLUXDB_VERSION}_amd64.deb.asc && \
+    	wget -q https://dl.influxdata.com/influxdb/releases/influxdb_${INFLUXDB_VERSION}_amd64.deb && \
+    	gpg --batch --verify influxdb_${INFLUXDB_VERSION}_amd64.deb.asc influxdb_${INFLUXDB_VERSION}_amd64.deb && \
+    	dpkg -i influxdb_${INFLUXDB_VERSION}_amd64.deb && \
+    	rm -f influxdb_${INFLUXDB_VERSION}_amd64.deb*
 
 # ----------------- #
 #   Configuration   #
@@ -84,6 +95,8 @@ ADD     ./grafana/dashboard-loader/dashboard-loader.js /src/dashboard-loader/
 ADD     ./nginx/nginx.conf /etc/nginx/nginx.conf
 ADD     ./supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
+# Configure influxdb
+COPY 	./influxdb/influxdb.conf /etc/influxdb/influxdb.conf
 
 # ---------------- #
 #   Expose Ports   #
@@ -107,7 +120,12 @@ EXPOSE  8126
 # Graphite web port
 EXPOSE 81
 
+# Influxdb UDP port and admin port
+EXPOSE 8086
+EXPOSE 8083
 
+# keep the influxdb data 
+VOLUME /var/lib/influxdb
 
 # -------- #
 #   Run!   #
