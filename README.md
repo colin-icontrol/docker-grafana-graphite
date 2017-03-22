@@ -1,7 +1,7 @@
-StatsD + Graphite + Grafana 2 + Kamon Dashboards
+StatsD + Graphite + Influxdb + Grafana 2 + Kamon Dashboards
 ---------------------------------------------
 
-This image contains a sensible default configuration of StatsD, Graphite and Grafana, and comes bundled with a example
+This image contains a sensible default configuration of Influxdb, StatsD, Graphite and Grafana, and comes bundled with a example
 dashboard that gives you the basic metrics currently collected by Kamon for both Actors and Traces. There are two ways
 for using this image:
 
@@ -17,7 +17,8 @@ need as a prerequisite is having `docker`, `docker-compose`, and `make` installe
 - `2004`: the Graphite pickled stats publication port
 - `8125`: the StatsD port.
 - `8126`: the StatsD administrative port.
-
+- `8083`: the Influxdb administrative port.
+- `8086`: the Influxdb stats publication port
 To start a container with this image you just need to run the following command:
 
 ```bash
@@ -48,6 +49,11 @@ ports to whatever you want by changing left side number in the `--publish` param
 The Dockerfile and supporting configuration files are available in our [Github repository](https://github.com/kamon-io/docker-grafana-graphite).
 This comes specially handy if you want to change any of the StatsD, Graphite or Grafana settings, or simply if you want
 to know how tha image was built. The repo also has `build` and `start` scripts to make your workflow more pleasant.
+
+### Using the Influxdb ###
+
+If you want to post stats to Influxdb, you need to create a database in Influxdb before posting any stats. You can access to http://influxdb.host.com:8083 administrative page, to create database, 
+the database name will be used in Influxdb client's configuration. 
 
 
 ### Using the Dashboards ###

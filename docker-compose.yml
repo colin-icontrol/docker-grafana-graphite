@@ -2,14 +2,18 @@ version: '2'
 services:
   grafana_graphite:
     build: .
-    image: kamon/grafana_graphite
-    container_name: kamon-grafana-dashboard
+    image: graphite-statsd-influxdb
+    container_name: graphite-statsd-influxdb
     ports:
       - '80:80'
       - '81:81'
+      - '2003:2003'
       - '8125:8125/udp'
       - '8126:8126'
+      - '8086:8086'
+      - '8083:8083'
     volumes:
       - ./data/whisper:/opt/graphite/storage/whisper
       - ./data/grafana:/opt/grafana/data
       - ./log/graphite:/opt/graphite/storage/log
+      - ./data/influxdb:/var/lib/influxdb
